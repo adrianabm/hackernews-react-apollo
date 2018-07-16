@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
 import { AUTH_TOKEN } from '../constants'
 import { timeDifferenceForDate } from '../utils'
@@ -33,8 +35,34 @@ class Link extends Component {
   }
 
   _voteForLink = async () => {
-    // ... you'll implement this in chapter 6
+    const linkId = this.props.link.id
+    await this.props.voteMutation({
+      variables: {
+        linkId
+      }
+    })
   }
 }
 
-export default Link
+const VOTE_MUTATION = gql`
+  mutation VoteMutation($linkId: ID!) {
+    vote(linkId: $linkId) {
+      id
+      link {
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+      user {
+        id
+      }
+    }
+  }
+`
+
+export default graphql(VOTE_MUTATION, {
+  name: 'voteMutation'
+})(Link)
