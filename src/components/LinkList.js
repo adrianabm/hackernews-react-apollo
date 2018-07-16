@@ -19,10 +19,28 @@ class LinkList extends Component {
     return (
       <div>
         {linksToRender.map((link, index) => (
-          <Link key={link.id} index={index} link={link} />
+          <Link
+            key={link.id}
+            updateStoreAfterVote={this._updateCacheAfterVote}
+            index={index}
+            link={link}
+          />
         ))}
       </div>
     )
+  }
+
+  _updateCacheAfterVote = (store, createVote, linkId) => {
+    // 1. Read current state of the cached data for FEED_QUERY
+    const data = store.readQuery({ query: FEED_QUERY })
+
+    // 2. Retrieve link that the user just voted for from that list +
+    // manipulate that  link by resetting its votes to the votes that were just returned from the server.
+    const votedLink = data.feed.links.find(link => link.id === linkId)
+    votedLink.votes = createVote.link.votes
+
+    // 3. Take the modified data and write it back to the store.
+    store.writeQuery({ query: FEED_QUERY, data })
   }
 }
 
