@@ -46,7 +46,7 @@ class LinkList extends Component {
 
 // 1. create const FEED_QUERY that stores the query.
 // The gql function is used to parse the plain string that contains the GraphQL code.
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   # 2. Define the GraphQL query. FeedQuery is the operation name.
   query FeedQuery {
     feed {
